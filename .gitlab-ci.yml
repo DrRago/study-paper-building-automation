@@ -1,6 +1,6 @@
 compile-pdf:
   stage: build
-  image: blang/latex
+  image: dregistry.gahr.dev/texlife-full
   script:
     - make
   artifacts:
