@@ -1,0 +1,230 @@
+%! Author = Leonhard Gahr <leonhard.gahr@gmail.com>
+%! Date = 22/01/20
+%! Info = Tx000_template
+
+\chapter{Umsetzung}
+Zu Beginn des Projekts stellt sich heraus, dass es zeitliche Komplikationen bei der Umsetzung geben wird. Aufgrund einer verkürzten Praxisphase sowie zusätzlicher Abwesenheiten, beschränkt sich diese Praxisphase auf 30 Arbeitstage, von denen ca. 18 Tage für andere Arbeiten investiert werden müssen. Daher beschränkt sich die Umsetzung des Test Managers auf die Grundfunktionen, die in \Cref{sub_sec-test_manager-basics} beschrieben sind.\\
+Die Umsetzung wird strukturiert in die Schritte \textbf{Einarbeitung} und \textbf{Entwicklung}, da mit neuen Technologien gearbeitet wird.
+\section{Einarbeitung}
+Die Einarbeitung besteht aus der Analyse des \gls{VB}6-Codes und des \glspl{frontend} (\Cref{fig-mes_portal_test-manager}), des bestehenden Test Managers. \gls{VB}s Syntax weist grundlegende Gemeinsamkeiten zu allgemeinen Programmiersprachen auf, wodurch das Verständnis des Codes keine Probleme darstellt. Da sich die zukünftige Entwicklung auf neue Technologie konzentriert, wird auf die Sprache nicht weiter eingegangen.\\
+
+\noindent Aufgrund der Simplizität des Workorder Planners bedarf dieser keine Einarbeitung in den bestehenden Code. Es benötigt jedoch praktische Erfahrungen, um das Framework Radzen vollständig nutzen zu können. Darauf wird im \Cref{sec-development} detailliert eingegangen.
+
+\glsdisablehyper %remove hyperlink from heading (especially for the toc)
+\subsection{\texorpdfstring{\gls{frontend}}{Frontend}}
+\glsenablehyper
+Die Analyse des \glspl{frontend} dient dazu, das Verhalten der \gls{UI} zu verstehen. Das \gls{frontend} wird zwar komplett neu designt, jedoch soll der grundlegende Aufbau sowie das Verhalten gleich bleiben.\\
+Des Weiteren kann die Analyse dazu führen, dass neue, nützliche Funktionen eingebaut werden, oder auch unnötige Funktionen entfernt werden. Hierbei werden in erster Linie die Bedürfnisse aus der Sicht des Nutzers berücksichtigt, jedoch mit der Einschränkung, dass nur die Grundfunktionen implementiert werden.\\
+Die Grundfunktionen befinden sich in der \Cref{fig-mes_portal_test-manager} auf der rechten unteren Seite im Abschnitt \enquote{Test}. Dabei sind die Punkte \enquote{Set Equipment Variables}, \enquote{Create Workorder} und \enquote{Start PIProcess} immer Auswählbar. \enquote{Start Workorder} kann nur ausgewählt werden, wenn \enquote{Create Workorder} auch ausgewählt ist und \enquote{Presetting variables in PI} hängt von \enquote{Start Workorder} ab. Zudem muss ein \enquote{Article Name} ausgewählt werden, wenn ein Arbeitsauftrag erstellt werden soll. Eine \enquote{Workorder Number} kann gesetzt werden, wenn \enquote{Start Workorder} ausgewählt ist, bleibt jedoch ein optionales Feld. \Cref{tab-ui_dependencies} zeigt diese Abhängigkeiten in tabellarischer Form. Auf der linken Seite stehen die \gls{UI}-Elemente, die aktiviert werden. Oben befinden sich die Elemente, von denen diese abhängen. Damit die linken \gls{UI}-Elemente aktiviert werden, müssen alle \enquote{Jas} in der Zeile erfüllt sein. Besteht keine Abhängigkeit, ist das Element standardmäßig aktiviert.
+
+\begin{table}[h]
+  \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
+    UI Element    & \multicolumn{1}{l|}{Set Eqp. Val.} & \multicolumn{1}{l|}{Create WO} & \multicolumn{1}{l|}{Start WO} & \multicolumn{1}{l|}{Preset vars.} & \multicolumn{1}{l|}{Start PIP} \\ \hline
+    \textbf{Set Eqp. Val.} & Nein                                 & Nein                             & Nein                            & Nein                                & Nein                             \\ \hline
+    \textbf{Create WO}     & Nein                                 & Nein                             & Nein                            & Nein                                & Nein                             \\ \hline
+    \textbf{Start WO}      & Nein                                 & Ja                            & Nein                            & Nein                                & Nein                             \\ \hline
+    \textbf{Preset vars.}  & Nein                                 & Ja                            & Ja                           & Nein                                & Nein                             \\ \hline
+    \textbf{Start PIP}     & Nein                                 & Nein                             & Nein                            & Nein                                & Nein                             \\ \hline
+    \textbf{Article Name}  & Nein                                 & Ja                            & Nein                            & Nein                                & Nein                             \\ \hline
+    \textbf{WO Number}     & Nein                                 & Ja                            & Nein                            & Nein                                & Nein                             \\ \hline
+  \end{tabular}
+  \captionof{table}{Test Manager \gls{UI} Abhängigkeiten\label{tab-ui_dependencies}}
+\end{table}
+
+\noindent Des Weiteren besteht der Test Manager aus drei Tabellen, die gruppiert sind in \enquote{Equipmentlist} und \enquote{PI List}.
+
+\subsubsection{Tabellenanzeigen}
+\paragraph{Equipmentlist} zeigt den IST-Zustand der Werte für alle Equipments in der Datenbank, die den aktuellen Filtern entsprechen. Die Tabelle dient dazu, die Werte der Equipments zu konfigurieren, die für eine \gls{PI} verwendet werden. Werden Werte für Equipments geändert, wird diese Änderung erst bei der Ausführung des Schritts \enquote{Set Equipment Variables} in die Datenbank übernommen.
+
+\paragraph{PI List} besteht aus zwei Tabellen. Die erste Tabelle zeigt alle \glspl{PI} an, die sich in der Datenbank befinden. Die ausgewählte \gls{PI} ist die, die bei Ausführung getestet wird.\\
+Die Rechte Tabelle zeigt die Parameter für die Ausgewählte \gls{PI}. Ähnlich wie bei der \enquote{Equipmentlist} können hier die Werte für einen Parameter verändert werden, die jedoch erst mit dem Schritt \enquote{Presetting variables in PI} tatsächlich gesetzt werden. Für die \gls{PI}-Variablen gibt es keinen IST-Zustand vor der Ausführung eines Arbeitsauftrages, daher zeigt die Tabelle immer den SOLL-Zustand der Variablen an, der erreicht werden soll, wenn eine \gls{PI} ausgeführt wird.
+
+\glsdisablehyper %remove hyperlink from heading (especially for the toc)
+\subsection{\texorpdfstring{\gls{backend}}{Backend} (Code)}\label{subsec_backend}
+\glsenablehyper
+Der Code des Test Managers befindet sich in einer einzigen Datei, dieaus fast 2000 Zeilen besteht. Dadurch wird die Übersichtlichkeit eingeschränkt. Da in einem Programmierprojekt immer ein Ziel ist, dass das Programm in Zukunft von anderen weiterentwickelt werden kann, wird hier die Anforderung gestellt, Funktionen, die mit der \gls{UI} zusammenhängen von denen zu trennen, die tatsächlich im \gls{backend} agieren. Zudem fallen einige logische Redundanzen auf (z. b. Code-Auszug \ref{listing_logikfehler}). In diesem Auszug ist zu sehen, dass die if-Abfrage in Zeile 234 überprüft, ob \enquote{Start Workorder} \textbf{ODER} \enquote{Create Workorder} ausgewählt ist, jedoch kann \enquote{Start Workorder} nur ausgewählt sein, wenn \enquote{Create Workorder} auch ausgewählt ist. Derartige Redundanzen befinden sich an mehreren Stellen in dem Code und erschweren die Leserlichkeit und Verständlichkeit teilweise. Außerdem können Bugs reduziert werden, wenn nicht benötigte Abfragen entfernt werden.
+
+\begin{lstlisting}[language={[Visual]Basic},
+frame=single,
+framexleftmargin=15pt,
+style=algoBericht,
+label={listing_logikfehler},
+captionpos=b,
+firstnumber=233,
+caption={Logische Redundanz im \gls{VB}6-Code}]
+Private Sub btnExecuteTest_Click()
+    If chkWOStart.value Or chkCreateWo.value Then
+        If cmbArticle.TEXT = "" Then
+            Call Log([...])
+            Exit Sub
+        End If
+    End If
+\end{lstlisting}
+
+\noindent Der Rest des Codes besteht aus einigen \gls{SQL} Abfragen, logischen Ausdrücken sowie der Kommunikation mit Schnittstellen von \gls{OP EX PH}. Diese \gls{VB}6-Schnittstellen werden von \gls{OP EX PH} ebenfalls als \textit{\glspl{dll}} für C\myHashtag\ bereitgestellt.\\
+Des Weiteren fallen im Code einige Stellen auf, bei denen \gls{VB} nicht die Funktionen bietet, die in C\myHashtag\ weitaus simpler umgesetzt werden können. Code Auszug \ref{listing_complex-vb} zeigt, wie in \gls{VB} ein Element in einer Liste gefunden werden muss.\\
+
+\begin{lstlisting}[language={[Visual]Basic},
+frame=single,
+framexleftmargin=15pt,
+style=algoBericht,
+label={listing_complex-vb},
+captionpos=b,
+firstnumber=580,
+caption={Finden eines Listenelements in \gls{VB}6}]
+SectionNamen = Split([some_string], ";")
+For I = 0 To UBound(SectionNamen) Step 1
+    If SectionNamen(I) = "SQL" Then
+        Result = SectionNamen(I)
+        [...]
+\end{lstlisting}
+
+\noindent In \gls{VB} ist hierfür eine For-Schleife und eine If-Abfrage notwendig. Dies erschwert durch die Einrückung die Leserlichkeit und erhöht die Komplexität. Code Auszug \ref{listing_easy-csh} hingegen zeigt denselben Anwendungsfall in C\myHashtag. Es ist zu sehen, dass in C\myHashtag hierfür nur eine Zeile Code ohne Einrückung beansprucht wird. Durch den \enquote{Null-conditional operator}\citetitlerefFootnote{microsoft.2020a} kann auf eine Überprüfung, ob das Element tatsächlich existiert, verzichtet werden.\\
+
+\begin{lstlisting}[language={csh},
+frame=single,
+framexleftmargin=15pt,
+style=algoBericht,
+label={listing_easy-csh},
+captionpos=b,
+caption={Finden eines Listenelements in C\#}]
+Element result = SectionNamen.Find(x => x == "SQL");
+[...]
+\end{lstlisting}
+
+\noindent Derartige Beispiele befinden sich an mehreren Stellen im Code und werden bei der Entwicklung und Portierung nach C\myHashtag\ angepasst.\\
+Alle Funktionen werden von dem Klick-Event des Knopfes \enquote{Execute Test} (siehe Code Auszug \ref{listing_logikfehler}) aufgerufen. Dies legt nah, dass bei der Portierung von dieser Funktion aus gestartet wird, um die \gls{backend}-Funktionalitäten zu implementieren.
+
+\section{Entwicklung}\label{sec-development}
+Da zu Beginn der Entwicklung nur noch fünf Arbeitstage zur Verfügung stehen, wird die Entwicklung mit dem simpleren Modul Workorder Planner begonnen. Dabei ist der erste Schritt die Einarbeitung in das Framework Radzen.
+
+\subsection{Radzen}
+Radzen ist ein Framework, das der Entwicklung und dem Deployment von Webanwendungen dient. Dabei stellt das das Framework einen \gls{UI}-Builder zur Verfügung, mit dem eine Blazor-Anwendung\citetitlerefFootnote{microsoft.2020b} generiert werden kann, ohne zu programmieren.
+
+\subsubsection{Vorbedingungen}
+Vor der Nutzung von Radzen müssen einige Systemvoraussetzungen geschaffen werden. Diese beinhalten:
+\begin{enumerate}
+\item \textbf{Installation des Radzen Clients}\\
+Der Client kann von der Radzen Seite\citetitlerefFootnote{radzen.2020a} heruntergeladen und installiert werden.
+\item \textbf{Installation der ASP.NET Core Runtime 3.1}\\
+Radzen benötigt vor der Erstellung eines Projekts die ASP.NET Core Runtime 3.1\citetitlerefFootnote{microsoft.2020c}.
+\item \textbf{Internetverbindung}\\
+Während der Entwicklung benötigt Radzen eine Internetverbindung, um die eigenen Abhängigkeiten herunterzuladen.
+\item \textbf{Installation von \gls{visual-studio} 2019}\\
+Für die Entwicklung mit der ASP.NET Core Runtime 3.1 ist \gls{visual-studio} 2019\citetitlerefFootnote{microsoft.2020d} erforderlich
+\end{enumerate}
+Sind diese Bedingungen erfüllt, kann mit der Entwicklung fortgefahren werden.\\
+
+\newpage\noindent \Cref{fig-radzen_overview} zeigt den \gls{UI}-Designer. Auf der linken Seite sind die Komponenten zu sehen, die sich per Drag-and-Drop der Seite hinzufügen lassen. In der Abbildung ist die Komponente \enquote{Gravatar} zu sehen, die dynamisch Profilbilder einer E-Mail-Adresse zuordnet. Zudem beinhaltet die Seite ein Textfeld, das per Datenbindung bei einer Änderung die E-Mail-Adresse für den \enquote{Gravatar} ändert. Diese Funktionen lassen sich alle über die \gls{UI} steuern, ohne wirklich programmieren zu müssen.\\
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{img/radzen_overview}
+  \caption{\label{fig-radzen_overview}Radzen - \gls{UI}-Designer}
+\end{figure}
+
+\noindent Das in \Cref{fig-radzen_overview} abgebildete Beispielprojekt kann durch einen Klick auf den \enquote{run}-Knopf ausgeführt werden. Dadurch wird der Code generiert und die Seite angezeigt (\Cref{fig-radzen_example}). Der \enquote{Gravatar} kann dynamisch durch Ändern der E-Mail-Adresse des Textfeldes geändert werden.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.65\textwidth]{img/radzen_example}
+  \caption{\label{fig-radzen_example}Radzen - Gravatar Beispiel}
+\end{figure}
+
+\noindent Das von Radzen erstellte Projekt lässt sich mit \gls{visual-studio} öffnen. In \gls{visual-studio} lassen sich eigene Klassen oder \enquote{Custom Components} erstellen. Ein \enquote{Custom Component} kann innerhalb von Radzen wiederum eingebunden und auf der Seite angezeigt werden. Die Komponente selbst wird von Radzen nicht automatisch generiert, sodass sie auch nicht überschrieben wird. Alle Seiten jedoch, die mit Radzen angelegt werden, werden beim Start des Projekts wieder neu generiert.\\
+\enquote{Custom Components} dienen der Implementierung von Dingen, die Radzen selbst nicht unterstützt.
+
+\newpage
+\subsection{Workorder Planner}
+Nach der Einarbeitung in ein Radzen Beispielprojekt kann der Workorder Planner selbst umgesetzt werden. Der erste Schritt hierbei ist die Auswahl der richtigen Darstellungsweise und Bibliothek. Dabei stehen die Darstellungsarten Gantt und Scheduler zur Auswahl, die beide von der \enquote{Syncfusion Blazor
+component library}\citetitlerefFootnote{syncfusion.2020a} bereitgestellt werden. Da Syncfusion eine Bibliothek für Blazor ist, ist die Anbindung kein Problem, da Syncfusion lediglich in \gls{visual-studio} als Bibliothek hinzugefügt werden muss. Der Syncfusion Beispielcode ist ausreichend, um erste Informationen zu erhalten.
+
+\subsubsection{Gantt-Chart}
+Ein Gantt Chart erfüllt visuell die Anforderungen an die Anzeige. Als Task werden die Arbeitsaufträge aus der Datenbank angezeigt. Da die Datenbankverbindung extern geschehen soll, wird als Datenquelle vorübergehend eine JSON-Datei verwendet, dessen Struktur im Code Auszug \ref{listing_json-source-file} dargestellt ist.
+
+\begin{lstlisting}[language={JavaScript},
+frame=single,
+framexleftmargin=15pt,
+style=algoBericht,
+label={listing_json-source-file},
+captionpos=b,
+caption={Struktur der Quell-JSON-Datei}]
+[
+  {
+    "Id": 1,
+    "Name": "SomeName",
+    "StartDate": "2019-04-23",
+    "Duration": "5",
+    "Status": "c"
+  },
+  {
+    "Id": 2,
+    "Name": "Create Something",
+    "StartDate": "2019-04-07",
+    "Duration": "2",
+    "Status": "r"
+  },
+  ...
+]
+\end{lstlisting}
+
+\newpage\noindent Diese Daten werden geladen und der Blazor Komponente bereitgestellt, die bei jedem Laden der Seite diese Daten neu anfordert. Der Code Auszug \ref{listing_gantt-component} zeigt die Definition der Blazor Komponente für ein Gantt-Diagramm. Diese Komponente wird als \enquote{Custom Component} bei Radzen hinzugefügt.
+
+\begin{lstlisting}[language={XML},
+frame=single,
+framexleftmargin=15pt,
+style=algoBericht,
+label={listing_gantt-component},
+captionpos=b,
+caption={Custom Gantt Component}]
+@using Syncfusion.Blazor.Gantt
+@using MesPortal.Services
+
+<SfGantt DataSource="@TaskCollection" Height="100%" Width="100%"
+    Toolbar="@(new List<string> {"ZoomIn", "ZoomOut", "ZoomToFit"})"
+    TreeColumnIndex="1" AllowFiltering="true"
+    ProjectStartDate="@ProjectStart" ProjectEndDate="@ProjectEnd">
+
+    <GanttTaskFields Id="Id" Name="Name" StartDate="StartDate"
+        EndDate="EndDate" Duration="Duration" Progress="Progress"
+        Notes="Status">
+    </GanttTaskFields>
+</SfGantt>
+
+@code{
+    public DateTime ProjectStart = new DateTime(2019, 3, 24);
+    public DateTime ProjectEnd = new DateTime(2020, 12, 28);
+    public List<GanttData.WorkOrder> TaskCollection { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TaskCollection = GanttData.LoadJson();
+    }
+}
+\end{lstlisting}
+
+\noindent Wenn die Syncfusion-Abhängigkeiten eingebunden sind, wird das Radzen Projekt gestartet. \Cref{fig-wo_planner_gantt} zeigt die Komponente, nachdem sie geladen ist. Jeder Task stellt hier einen Arbeitsauftrag dar. Es ist zu erkennen, dass bei wenigen Arbeitsaufträgen eine übersichtliche Anzeige gewährleistet ist. Betrachtet man nun jedoch, dass in einer Anlage mehrere Hundert Arbeitsaufträge geplant sein können, stellt sich heraus, dass ein Gantt-Diagramm nicht die richtige Darstellungsweise ist, da für jeden Arbeitsauftrag eine neue Zeile im Diagramm angelegt wird. Dies entspricht auch nicht der eigentlichen Anforderung (siehe \Cref{fig-mes_portal_workorder-planner}). Diese Tatsache ist leider erst spät aufgefallen, da nach ersten Eindrücken das Gantt-Diagramm nach der passenden Lösung ausgesehen hat. Die alternative Darstellungsweise ist der von Syncfusion bereitgestellte Scheduler.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/wo_planner-gantt}
+  \caption{\label{fig-wo_planner_gantt}MES-Portal Workorder Planner (Gantt)}
+\end{figure}
+
+\subsubsection{Scheduler}
+Der zweite Ansatz der Umsetzung des Workorder Planners mit einem Scheduler kann aus zeitlichen Gründen nicht im Radzen Projekt übernommen werden. \Cref{fig-wo_planner_timeline} zeigt ein Beispiel von Syncfusion\citetitlerefFootnote{syncfusion.2020b} zu einem Scheduler Timeline Diagramm mit Gruppierung. Diese Ansicht passt genau auf die Anforderungen, unter Berücksichtigung, dass die Höhe der einzelnen Gruppen angepasst werden kann, damit mehrere Arbeitsaufträge gleichzeitig in einer Gruppe angezeigt werden. Der Dokumentation zufolge ist dies möglich, es kann aber nicht im Rahmen dieser Arbeit umgesetzt werden.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/wo_planner-timeline}
+  \caption{\label{fig-wo_planner_timeline}Syncfusion Scheduler Timeline Gruppierung Beispiel}
+\end{figure}
+
+\section{Schwierigkeiten mit Radzen}
+Der Funktionsumfang von Radzen ist sehr groß, weshalb Radzen mehr als nur ein Framework ist. In diesem Fall zieht Radzen den Nachteil mit sich, dass während der Entwicklung eine Internetverbindung benötigt wird.\\
+Bei Siemens findet die Entwicklung von Produkten zu \gls{OP EX PH} normalerweise auf \glspl{vm} auf einem \gls{ESXi} Server statt. Sicherheitshalber hat dieser \gls{ESXi} Server keine Anbindung an das Internet und ist nur aus dem internen Siemens-Netzwerk erreichbar. Daher kann Radzen nicht auf diesen \glspl{vm} laufen und muss lokal verwendet werden. Dafür muss eine lokale \gls{vm} installiert werden, auf der \gls{OP EX PH} läuft. Außerdem muss der PC leistungsstark genug sein, um ein solches System einwandfrei am Laufen zu halten. Dies ist durch die Ausbildungslaptops der Siemens AG Karlsruhe nicht standardmäßig gegeben. Dadurch, dass ein Ersatzgerät organisiert werden muss, tritt zusätzlich eine Verzögerung bei der Entwicklung auf.
+
+\section{Zukünftige Entwicklungen}
+Im Rahmen der Arbeit kann nur der Workorder Planner teilweise entwickelt werden. Die zukünftige Entwicklung zu diesem Projekt schließt den Workorder Planner mit der Scheduler Timeline Komponente von Syncfusion ab.\\
+Die Einarbeitung in den Test Manager ist abgeschlossen und die Entwicklung kann nach Abschluss des Workorder Planners beginnen.

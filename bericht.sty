@@ -1,0 +1,281 @@
+%! Author = Leonhard Gahr <leonhard.gahr@gmail.com>
+%! Date = 22/01/20
+%! Info = Tx000_template
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bericht}[2017/10/06 v1.2]
+
+% required packages
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{csquotes}
+\usepackage{xspace}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{eurosym}
+\usepackage{pdfpages}
+\usepackage{needspace}
+\usepackage[bookmarksopen,bookmarksnumbered]{hyperref}
+\usepackage{bookmark} % Bookmarks for hyperref
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[headings]{fullpage}
+\usepackage{fancyhdr}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{framed}
+
+\usepackage{wrapfig}
+
+\definecolor{commentsColor}{rgb}{0.497495, 0.497587, 0.497464}
+\definecolor{keywordsColor}{rgb}{0.000000, 0.000000, 0.635294}
+\definecolor{stringColor}{rgb}{0.558215, 0.000000, 0.135316}
+
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{makeidx}
+\makeindex
+
+% custom commands
+\newcommand\myHashtag{\scalebox{0.8}{\raisebox{0.4ex}{\#}}}
+\newcommand{\email}[1]{\href{mailto:#1}{\textless#1\textgreater}}
+
+% citation, bibliography, BIBTEX
+\usepackage{etoolbox}
+\usepackage[
+	hyperref=true,
+	backref=true,
+	bibencoding=inputenc,
+	style=authoryear-comp,
+	backend=biber,
+	sorting=nty]{biblatex}
+\renewcommand{\mkbibnamefamily}[1]{\textsc{#1}}
+
+% margin of items in references
+\renewcommand{\bibitemsep}{1ex}
+
+% parentheses of \parencite{..}?
+\renewcommand{\bibleftparen}{[}
+\renewcommand{\bibrightparen}{]}
+
+\let\citeNoParen\cite
+\let\cite\parencite
+
+% custom\cite-commands:
+% print subtitle of a fields reference
+\DeclareCiteCommand{\citesubtitle}
+{\boolfalse{citetracker}
+	\boolfalse{pagetracker}
+	\usebibmacro{prenote}}
+{\indexfield{indextitle}
+	\printfield[citetitle]{subtitle}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
+% print title of a fields reference
+\DeclareCiteCommand{\citetitleref}
+{\booltrue{citetracker}
+	\booltrue{pagetracker}
+	\usebibmacro{prenote}}
+{\indexfield{indextitle}
+	\printfield[citetitle]{title} \cite{\thefield{entrykey}}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
+% like \citetitleref, but as footer
+\DeclareCiteCommand{\citetitlerefFootnote}
+{}
+{\footnote{\citetitleref{\thefield{entrykey}}}}
+{}
+{}
+
+
+% print the URL (HOWPUBLISHED-field)
+\DeclareCiteCommand{\citeurl}
+{\booltrue{citetracker}
+	\booltrue{pagetracker}
+	\usebibmacro{prenote}}
+{\indexfield{indextitle}
+	\printfield[citetitle]{howpublished}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
+% print the URL (reference)
+\DeclareCiteCommand{\citeurlref}
+{\booltrue{citetracker}
+	\booltrue{pagetracker}
+	\usebibmacro{prenote}}
+{\indexfield{indextitle}
+	\printfield[citetitle]{howpublished} \cite{\thefield{entrykey}}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
+% print given name of author
+\DeclareCiteCommand{\citefullauthor}
+{\booltrue{citetracker}
+	\booltrue{pagetracker}
+	\usebibmacro{prenote}}
+{\indexfield{indextitle}
+	\textsc{\printnames[byeditor]{author}}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
+% algorithm-listings
+\usepackage{listings}
+
+% header of lisings
+\renewcommand{\lstlistingname}{Code-Auszug}
+
+% header of lisings-list
+\renewcommand{\lstlistlistingname}{Liste der Code-Auszüge}
+
+% style template
+\lstdefinestyle{algoBericht}{
+	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{commentsColor}\textit,    % comment style
+	deletekeywords={...},            % if you want to delete keywords from the given language
+	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	frame=tb,                           % adds a frame around the code
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{keywordsColor}\bfseries,       % keyword style
+	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+	numbersep=5pt,                   % how far the line-numbers are from the code
+	numberstyle=\tiny\color{commentsColor}, % the style that is used for the line-numbers
+	rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	showstringspaces=false,          % underline spaces within strings only
+	showtabs=false,                  % show tabs within strings adding particular underscores
+	stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+	stringstyle=\color{stringColor}, % string literal style
+	tabsize=2,                       % sets default tabsize to 2 spaces
+	title=\lstname,                  % show the filename of files included with \lstinputlisting; also try caption instead of title
+	columns=fixed
+}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\lstloadlanguages{C,C++,csh,Java,[Visual]Basic}
+\lstset{
+language=csh,
+basicstyle=\footnotesize\ttfamily,
+numbers=left,
+numberstyle=\tiny,
+numbersep=5pt,
+tabsize=2,
+extendedchars=true,
+breaklines=true,
+frame=b,
+stringstyle=\color{blue}\ttfamily,
+showspaces=false,
+showtabs=false,
+xleftmargin=17pt,
+framexleftmargin=17pt,
+framexrightmargin=5pt,
+framexbottommargin=4pt,
+commentstyle=\color{green},
+morecomment=[l]{//}, %use comment-line-style!
+morecomment=[s]{/*}{*/}, %for multiline comments
+showstringspaces=false,
+morekeywords={ abstract, event, new, struct,
+as, explicit, null, switch,
+base, extern, object, this,
+bool, false, operator, throw,
+break, finally, out, true,
+byte, fixed, override, try,
+case, float, params, typeof,
+catch, for, private, uint,
+char, foreach, protected, ulong,
+checked, goto, public, unchecked,
+class, if, readonly, unsafe,
+const, implicit, ref, ushort,
+continue, in, return, using,
+decimal, int, sbyte, virtual,
+default, interface, sealed, volatile,
+delegate, internal, short, void,
+do, is, sizeof, while,
+double, lock, stackalloc,
+else, long, static,
+enum, namespace, string},
+keywordstyle=\color{cyan},
+identifierstyle=\color{red},
+backgroundcolor=\color{white},
+}
+
+
+% abbreviations
+\usepackage[abbreviations, indexonlyfirst]{glossaries-extra}
+\usepackage{tabu}
+% Acronym-styles
+\renewcommand*{\glspostdescription}{\dotfill}
+\newglossarystyle{myacronymstyle}{%
+  \renewenvironment{theglossary}%
+    {\begin{longtabu} to \linewidth {lX}}%
+    {\end{longtabu}}%
+  % Header line
+  \renewcommand*{\glossaryheader}{}%
+  % indicate what to do at the start of each logical group
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \glsentryitem{##1}\textbf{\glstarget{##1}{##2}} & ##3\glspostdescription ##5% Description
+  }
+}
+
+\usepackage{cleveref}
+
+% list of formulas - comment out if not needed
+\usepackage{float}
+\newfloat{eq}{H}{for}[chapter]
+\newcommand{\forname}{Formelverzeichnis}
+\newcommand{\listofequations}{\listof{eq}{\forname}}
+
+\newcommand{\eqlabel}[2]{
+	\label{#1}
+	\addcontentsline{for}{eq}{(\ref{#1}) #2}}
+
+% Definitionen mit Ausgabe im Index
+% gibt #2 aus und fügt #1 bzw. #2 (wenn #1 nicht angegeben) in den Index ein
+\newcommand{\Def}[2][]{%
+	\def\OPTARG{#1}%
+	\def\EMPTY{}%
+	\ifx\OPTARG\EMPTY\index{#2}\else\index{#1}\fi%
+	\textbf{#2}\xspace%
+}
+
+\setlength {\marginparwidth }{2cm}
+
+\endinput

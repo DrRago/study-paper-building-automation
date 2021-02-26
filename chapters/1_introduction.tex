@@ -1,0 +1,24 @@
+%! Author = Leonhard Gahr <leonhard.gahr@gmail.com>
+%! Date = 22/01/20
+%! Info = Tx000_template
+
+\chapter{Einleitung}
+\section{Projektbeschreibung}
+Das \gls{MES} \gls{OP EX PH} (siehe \Cref{appendix_T2000_gahr}, Abschnitt 2.2)\citetitlerefFootnote{gahr.2020} bietet zur zentralisierten Nutzung einiger Funktionen und Tools das \gls{MES} Portal. Aufgrund der verwendeten Technologie \gls{VB}6, die inzwischen veraltet ist, wird diese \gls{UI} in eine modernere, webbasierte Technologie portiert. Hierfür wird das Framework Radzen verwendet, da durch den existierenden \gls{UI}-Designer, auf aufwendige Frontend-Entwicklung verzichtet werden kann. Radzen ist bereits als Framework evaluiert worden.\\
+Die Entwicklung des \gls{MES} Portals findet in Kooperation mit Mitarbeitern von anderen Standorten statt. Im Rahmen dieser \Was\ liegt der Fokus auf der Entwicklung der Module Workorder Planner und Test Manager.\\
+Der Workorder Planner soll eine Übersicht über alle Arbeitsaufträge in einer Produktionsanlage liefern, um neue Aufträge in den verschiedenen Fertigungslinien anzusetzen. Die Arbeitsaufträge werden aus der \gls{OP EX PH}-Datenbank ausgelesen und in einem Planer-Graphen angezeigt.
+Die Funktion des Test Managers ist es, in \gls{OP EX PH} Parameter für eine bestimmte \gls{PI} zu setzen und diese anschließend als Arbeitsauftrag auszuführen. Dies erleichtert dem Nutzer das Testen von Arbeitsaufträgen, da diese Parameter ansonsten manuell gesetzt werden müssen und der Auftrag manuell gestartet werden muss.\\
+Als Nicht-Ziel wird die Authentifizierung des Nutzers in \gls{OP EX PH} definiert, da dieser Teil von dem allgemeinen \gls{MES}-Portal bereits gehandhabt wird.
+
+\section{Herangehensweise}
+Der Umfang des Projekts ist nicht in dem gegebenen Zeitraum umzusetzen. Aus diesem Grund wird die Entwicklung über den Rahmen dieser Arbeit hinaus fortgesetzt und eine Testphase der Anwendung ist noch nicht sinnvoll. Daher besteht das Projekt aus zwei Phasen:
+\begin{enumerate}
+\item Einarbeitung\\
+Im ersten Schritt muss der bestehende Programmcode des Test Managers analysiert werden. Da es sich um die Sprache \gls{VB}6 handelt und die Abhängigkeiten auch in C\myHashtag\ existieren, kann der Code für das \gls{backend} im Optimalfall transformiert werden.\\
+Der Workorder Planner jedoch implementiert keine Funktionen für \gls{OP EX PH} selbst, er stellt lediglich Datenbankeinträge dar. Aus diesem Grund ist der \gls{VB}6-Code nicht von Nutzen.\\
+Zudem ist für die Entwicklung das Framework Radzen vorgesehen. Eine Einarbeitung in die Dokumentation und einige Beispielprojekte dient dem Verständnis der Funktionsweise des Frameworks und \gls{UI}-Designers.
+\item Entwicklung\\
+Die Entwicklung findet in \gls{visual-studio} und dem Designer von Radzen statt, der auf \gls{visual-studio} aufbaut. Für den Test Manager wird evaluiert, ob der \gls{VB}6-Code tatsächlich in C\myHashtag\ transformiert werden kann. Wenn dies teilweise möglich ist, wird der entstandene Code optimiert und ggf. ergänzt. Das \gls{frontend} wird in Radzen neu entwickelt, wobei das bestehende Layout der \gls{VB}6 Anwendung beibehalten wird. Das transformierte \gls{backend} wird als externes Modul entwickelt, sodass das \gls{backend} unabhängig vom \gls{frontend} verändert werden kann. Außerdem verringert dies die Komplexität im Radzen Code.\\
+Der Workorder Planner wird als \enquote{Custom component} bei Radzen implementiert, da die Komponenten des \gls{UI}-Designers die geforderte Darstellung nicht unterstützt. Hierfür muss ein geeignetes Framework gefunden werden.
+\end{enumerate}
+Für den Fall, dass diese zwei Phasen der Umsetzung vorzeitig abgeschlossen werden, können zusätzliche Features im Workorder Planner implementiert werden, die die Nutzung für den Anwender erleichtert oder Kann-Ziele erfüllt. Diese werden im Laufe der Entwicklung definiert. Features bezüglich der Benutzerfreundlichkeit können oft erst definiert werden, wenn die zu verwendenden Bibliotheken und Darstellungsformen feststehen sowie festeht, welche Möglichkeiten diese bieten oder einschränken
