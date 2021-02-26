@@ -1,0 +1,18 @@
+compile-pdf:
+  stage: build
+  image: docker.siemens.com/leonhard.gahr/tx000_template/gahrlatex
+  script:
+    - make
+  artifacts:
+    paths:
+      - "*.pdf"
+
+pages:
+  stage: deploy
+  script:
+    - mkdir public
+    - cp *.pdf public
+    - cd public
+  artifacts:
+    paths: 
+      - public
