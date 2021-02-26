@@ -1,6 +1,6 @@
 compile-pdf:
   stage: build
-  image: docker.siemens.com/leonhard.gahr/tx000_template/gahrlatex
+  image: blang/latex
   script:
     - make
   artifacts:
