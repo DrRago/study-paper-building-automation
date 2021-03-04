@@ -103,8 +103,8 @@
         \ifx\instituteloc\undefined{}\else{\scshape \instituteloc} \\[10pt] \fi
         \hrule
         \vspace{10pt}
-        {\LARGE \bfseries \@title} \\[5pt]
-        {\large \bfseries \task} \\[3pt]
+        {\LARGE \bfseries \@title} \\[10pt]
+        {\Large \bfseries \task} \\[3pt]
         \StudentLang: {\itshape \@author}
         \vspace{8pt}
         \hrule
