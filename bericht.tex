@@ -40,8 +40,8 @@ disable % disable Todos
 
 \newcommand{\Was}{Studienarbeit}
 
-\newcommand{\Titel}{MES Portal}
-\newcommand{\AbgabeDatum}{14. September 2020}
+\newcommand{\Titel}{Künstliche Intelligenz im Bereich der Gebäudetechnik}
+\newcommand{\AbgabeDatum}{17. April 2020}
 
 \newcommand{\Abschluss}{Bachelor of Science}
 
@@ -91,23 +91,14 @@ pdfsubject={\Was}
     Kurs                          & \Kursbezeichnung \\
     Ausbildungsfirma              & \FirmenName      \\
                                   & \FirmenStadt     \\
-    Betreuer der Ausbildungsfirma & \BetreuerFirma   \\
+    Betreuer der Studienakademie & \BetreuerFirma   \\
     Gutachter der Studienakademie & \BetreuerDHBW    \\
   \end{tabular}
 \end{titlepage}
 
 \input{secondary/erklaerung}
 
-% abstracts
-\begin{abstractpage}
-  \begin{myabstract}{german}
-    Für das Siemens Produkt \gls{OP EX PH} existiert die Anwendung MES Portal, welche auf der Programmiersprache \gls{VB} 6 basiert. Zwei Module des Portals sind der Test Manager und der Workorder Planner. Diese werden aufgrund der veralteten Technologie in eine moderne, webbasierte Technologie portiert. Als neue Technologie soll das Framework Radzen verwendet werden. Bei der Entwicklung ergeben sich Schwierigkeiten, durch welche die Entwicklung nur verzögert fortgesetzt und nicht abgeschlossen werden kann.
-  \end{myabstract}
-
-  \begin{myabstract}{english}
-    The MES Portal is an application for the Siemens product \gls{OP EX PH}, which is written in the programming language \gls{VB}6. Two modules of that portal are the Test Manager and the Workorder Planner. As \gls{VB}6 is an outdated technology, these modules will be rewritten in a new, web based technology. The Radzen framework suits this use case. Technical problems delayed the development and the development could not be completed. A follow up project will be planned to complete the implementation
-  \end{myabstract}
-\end{abstractpage}
+\include{secondary/abstract}
 
 \tableofcontents
 \listoftables
