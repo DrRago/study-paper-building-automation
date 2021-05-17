@@ -42,6 +42,7 @@
 % custom commands
 \newcommand\myHashtag{\scalebox{0.8}{\raisebox{0.4ex}{\#}}}
 \newcommand{\email}[1]{\href{mailto:#1}{\textless#1\textgreater}}
+\newcommand{\source}[1]{\caption*{Quelle: {#1}} }
 
 % citation, bibliography, BIBTEX
 \usepackage{etoolbox}
@@ -174,6 +175,7 @@
   morestring=[b]',
   morestring=[b]"
 }
+
 \lstset{
    language=JavaScript,
    backgroundcolor=\color{lightgray},
@@ -190,7 +192,7 @@
    captionpos=b
 }
 
-\lstloadlanguages{C,C++,csh,Java,[Visual]Basic}
+\lstloadlanguages{C,C++,csh,Java}
 \lstset{
 language=csh,
 basicstyle=\footnotesize\ttfamily,
@@ -236,6 +238,17 @@ keywordstyle=\color{cyan},
 identifierstyle=\color{red},
 backgroundcolor=\color{white},
 }
+
+% abstract
+\newenvironment{abstractpage}
+{\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
+{\vfill\cleardoublepage}
+\newenvironment{myabstract}[1]
+{\bigskip\selectlanguage{#1}
+\begin{center}
+    \bfseries\abstractname
+\end{center}}
+{\par\bigskip}
 
 
 % abbreviations

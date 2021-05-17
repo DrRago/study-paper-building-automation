@@ -1,11 +1,10 @@
 %! Author = Leonhard Gahr <leonhard.gahr@gmail.com>
-%! Date = 22/01/20
-%! Info = Tx000_template
+%! Date = 25/04/21
+%! Info = Studienarbeit
 
 \documentclass[
 ngerman, % new German spelling
 a4paper, % paper size
-%twoside, % Zweiseitiger Druck (rechts/links)
 12pt,
 pdftex,
 disable % disable Todos
@@ -21,8 +20,8 @@ disable % disable Todos
 \glstocfalse
 \setabbreviationstyle{long-short}
 
+% abbreviations file
 \include{secondary/abbr}
-
 
 % Information of the paper
 
@@ -34,17 +33,13 @@ disable % disable Todos
 \newcommand{\FirmenStadt}{Karlsruhe}
 \newcommand{\FirmenLogoDeckblatt}{\includegraphics[width=5cm]{img/sie-logo.png}}
 
-\newcommand{\BetreuerFirma}{Prof. Kai Becher}
-\newcommand{\BetreuerDHBW}{Prof. Dr. Jörn Eisenbiegler}
-
+\newcommand{\BetreuerDHBW}{Prof. Dr. Kai Becher}
 
 \newcommand{\Was}{Studienarbeit}
-
 \newcommand{\Titel}{Künstliche Intelligenz im Bereich der Gebäudetechnik}
-\newcommand{\AbgabeDatum}{17. April 2020}
+\newcommand{\AbgabeDatum}{17. Mai 2021}
 
 \newcommand{\Abschluss}{Bachelor of Science}
-
 \newcommand{\Studiengang}{Angewandte Informatik}
 
 \hypersetup{
@@ -53,23 +48,16 @@ pdftitle={\Titel},
 pdfsubject={\Was}
 }
 
-\newenvironment{abstractpage}
-{\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
-{\vfill\cleardoublepage}
-\newenvironment{myabstract}[1]
-{\bigskip\selectlanguage{#1}
-\begin{center}
-    \bfseries\abstractname
-\end{center}}
-{\par\bigskip}
-
 \bibliography{bericht}
 
-% REMOVE ON RELEASE
-\usepackage[12hr]{datetime}
-
+% 1.5 line height
 \setstretch{1.25}
+\setlength{\parindent}{0em}
+
 \begin{document}
+
+\pagenumbering{Roman}
+
 \begin{titlepage}
   \begin{center}
     \vspace*{-2cm}
@@ -91,34 +79,45 @@ pdfsubject={\Was}
     Kurs                          & \Kursbezeichnung \\
     Ausbildungsfirma              & \FirmenName      \\
                                   & \FirmenStadt     \\
-    Betreuer der Studienakademie & \BetreuerFirma   \\
     Gutachter der Studienakademie & \BetreuerDHBW    \\
   \end{tabular}
 \end{titlepage}
 
 \input{secondary/erklaerung}
 
-\include{secondary/abstract}
+% abstracts
+\begin{abstractpage}
+  \begin{myabstract}{german}
+    Smart Home gewinnt immer mehr an Bedeutung. Mit diesem Trend bieten sich viele Möglichkeiten des Einsatzes von künstlicher Intelligenz zur Optimierung der Haussteuerung hinsichtlich Energieverbrauch und -effizienz. Doch was ist überhaupt \enquote{künstliche Intelligenz}? In dieser Studienarbeit wird auf diese Frage eingegangen und ein Konzept zugrundegelegt, das den Einsatz solch einer künstlichen Intelligenz beschreibt, sowie die Optimierung und Sicherstellung der Validität dieser \enquote{Intelligenz}.
+  \end{myabstract}
 
+  \begin{myabstract}{english}
+    Smart home is becoming more and more important. This trend offers many opportunities for the use of artificial intelligence to optimize home control in terms of energy consumption and efficiency. But what is artificial intelligence anyway? In this student research project, this question is addressed and a concept is created that describes the use of such a artificial intelligence, as well as the optimization of it.
+  \end{myabstract}
+\end{abstractpage}
+
+% begin of indices
 \tableofcontents
-\listoftables
 \listoffigures
 \lstlistoflistings
 
-\printnoidxglossary[type=main, title={Glossar}]
+%\printnoidxglossary[type=main, title={Glossar}]
 \printnoidxglossary[type=\acronymtype, title={Abkürzungsverzeichnis}]
-
-
+\clearpage
 
 % begin of chapters
+\pagenumbering{arabic} 
+
 \include{chapters/1_introduction}
+\include{chapters/2_begriff_ki}
+\include{chapters/3_ablauf}
+\include{chapters/4_energieeffizienz}
+\include{chapters/5_reflexion}
 
 % begin of appendix
-\clearpage
 \appendix
-\clearpage
 
-\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
 \def\refname{Literaturverzeichnis}
 \printbibliography
 
