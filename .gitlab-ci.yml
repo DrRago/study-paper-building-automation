@@ -1,8 +1,6 @@
 compile-pdf:
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin 
   stage: build
-  image: dregistry.gahr.dev/texlife-full
+  image: thomasweise/docker-texlive-full
   script:
     - make
   artifacts:
