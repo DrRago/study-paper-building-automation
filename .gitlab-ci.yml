@@ -1,6 +1,6 @@
 compile-pdf:
   stage: build
-  image: dregistry.gahr.dev/texlife-full
+  image: thomasweise/docker-texlive-full
   script:
     - make
   artifacts:
