@@ -1,0 +1,88 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	ngerman,
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{pm}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+
+\usepackage{graphicx} % Required for including images
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+\usepackage{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Künstliche Intelligenz im Bereich der Gebäudetechnik}
+
+\newcommand{\task}{Risikobetrachtung} % Assignment title
+
+\author{Leonhard Gahr} % Student name
+
+\date{18. März 2021} % Due date
+
+\institute{\includegraphics[width=5cm]{../img/sie-logo.png}\hfill\includegraphics[width=4cm]{../img/dhbw-logo}} % Institute or school name
+
+\class{TINF18B4} % Course or class name
+
+\professor{Michael Vetter} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+
+\section*{\large Risiken}
+\begin{enumerate}
+	\item [Krankheit] \quad Gesundheitsbedingt nicht zur Arbeit bereit \quad \% des Eintritts: 10 \quad Einfluss: 5 \quad Risikofaktor: 50
+	\item [Komplexität] \quad Recherche der theorie ist Komplexer als erwartet und benötigt mehr Zeit \quad \% des Eintritts: 30 \quad Einfluss: 5 \quad Risikofaktor: 150
+	\item [Technik] \quad Datenvverlust aufgrund von technischen Problemen \quad \% des Eintritts: 5 \quad Einfluss: 8 \quad Risikofaktor: 40
+\end{enumerate}
+
+
+\section*{\large Gegenmaßnahmen}
+\begin{enumerate}
+	\item [Krankheit] \quad Keine gesundheitlichen Risiken Eingehen. Verstärkt auf allgemeine Gesundheit achten
+	\item [Komplexität] \quad Zeit umplanen, komplexität aus der Umsetzung in die Recherche verschieben
+	\item [Technik] \quad Regelmäßige Backups und Nutzung von Versionskontrolle (z. B. Git)
+\end{enumerate}
+\end{document}
